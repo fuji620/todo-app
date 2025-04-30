@@ -90,3 +90,21 @@ def update_count(item_id: int,count: Count,db: Session = Depends(get_db)):
     db.commit()
     db.refresh(count_update)
     return count_update
+
+class UpdateItem(BaseModel):
+    name:str
+    checked: bool
+    category: str
+    count : int
+
+@app.put("/items/{item_id}")
+def update_item(item_id: int, item: UpdateItem, db: Session = Depends(get_db)):
+    db_item = db.query(ItemModel).filter(ItemModel.id == item_id).first()
+    if db_item:
+        db_item.name = item.name
+        db_item.checked = item.checked
+        db_item.category = item.category
+        db_item.count = item.count
+        db.commit()
+        db.refresh(db_item)
+        return db_item

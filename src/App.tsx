@@ -40,25 +40,31 @@ function App() {
         count: item.count,
         };
         await axios.put(`${items_URL}/${item.id}`, updatedItem);
-        fetchItems(); // ← 表示を更新
+
+        setItems((prevItems) =>
+            prevItems.map((i) =>
+            i.id === item.id ? { ...i, checked: !i.checked } : i
+            )
+        );
+        
     };
+
+    
 
 
 
     const addItem = async () => {
         await axios.post(items_URL,{ name, checked: false,category:currentcategory});
         setName("");
-        //fetchItems();
+        fetchItems();
     };
 
     const deleteItem = async (id:number) => {
         await axios.delete(`${items_URL}/${id}`);
-        //fetchItems();
     };
 
-    const updateItem = async (id:number, newName:string,checked:boolean,category:string) => {
-        await axios.put(`${items_URL}/${id}`, { name: newName,checked:checked,category:category });
-        fetchItems();
+    const updateItem = async (id:number, newName:string,checked:boolean,category:string,count:number) => {
+        await axios.put(`${items_URL}/${id}`, { name: newName,checked:checked,category:category,count:count });
     };
 
     
@@ -140,7 +146,7 @@ return(
                     <input
                         type="text"
                         defaultValue={item.name}
-                        onBlur={(e) => updateItem(item.id,e.target.value,item.checked,item.category)}
+                        onBlur={(e) => updateItem(item.id,e.target.value,item.checked,item.category,item.count)}
                         />
                 </li>
             ))}
@@ -149,3 +155,4 @@ return(
 );
 }
 export default App;
+        //fetchItems(); // ← 表示を更新
