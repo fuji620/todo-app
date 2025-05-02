@@ -1,3 +1,3 @@
 # React + TypeScript + Vite + daisyUI
 
-![altテキスト](public/Screenshot.png)
+![altテキスト](Screenshot from 2025-05-03 00-02-44.png)
