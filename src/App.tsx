@@ -19,11 +19,16 @@ function App() {
     const [items,setItems] = useState<Item[]>([]);
     const [name,setName] = useState<string>("");
     const [currentcategory,setCurrentcategory] = useState<string>("果物")
+    const [hasChanges, setHasChanges] = useState(false);
 
     const countItems = async (id:number,newCount:number) => {
-        await axios.put(`${fast_API_URL}/count_state/${id}`,{counted: newCount});
-        fetchItems();
-    }
+        setItems(prev =>
+            prev.map(item =>
+                item.id === id ? {...item,count:newCount } : item
+            )
+        );
+        setHasChanges(true);
+    };
 
 
     const fetchItems = async () => {
@@ -31,26 +36,29 @@ function App() {
         setItems(response.data);
     };
 
-    const handleCheckboxChange = async (item:Item) => {
-        const updatedItem = {
-        id: item.id,
-        name: item.name,
-        checked: !item.checked,
-        category: item.category,
-        count: item.count,
-        };
-        await axios.put(`${items_URL}/${item.id}`, updatedItem);
-
-        setItems((prevItems) =>
-            prevItems.map((i) =>
+    const handleCheckboxChange = (item: Item) => {
+        setItems(prev =>
+        prev.map(i =>
             i.id === item.id ? { ...i, checked: !i.checked } : i
-            )
+        )
         );
-        
+        setHasChanges(true);
     };
-
     
+    const allsave = async () => {
+        for (const item of items) {
+            await axios.put(`${fast_API_URL}/items/${item.id}`, item);
+        }
+        setHasChanges(false);
+        };
 
+    const handleCategoryChange = async (newCategory: string) => {
+        if (hasChanges) {
+        await allsave();
+        }
+        setCurrentcategory(newCategory);
+        fetchItems();
+    };
 
 
     const addItem = async () => {
@@ -59,9 +67,11 @@ function App() {
         fetchItems();
     };
 
-    const deleteItem = async (id:number) => {
-        await axios.delete(`${items_URL}/${id}`);
+    const deleteItem = async (id: number) => {
+        await axios.delete(`${fast_API_URL}/items/${id}`);
+        setItems(prev => prev.filter(item => item.id !== id));
     };
+
 
     const updateItem = async (id:number, newName:string,checked:boolean,category:string,count:number) => {
         await axios.put(`${items_URL}/${id}`, { name: newName,checked:checked,category:category,count:count });
@@ -92,13 +102,14 @@ function App() {
     
 
 return(
+    <>
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
     <h1 className="text-3xl font-bold mb-4">Todo list</h1>
             <div className="category-tabs">
             {["家電","果物","消耗品"].map((cat) => (
                 <button
                 key={cat}
-                onClick={() => setCurrentcategory(cat)}
+                onClick={() => handleCategoryChange(cat)}
                 className="btn btn-accent"
                 >
                 {cat}
@@ -106,12 +117,13 @@ return(
                 
             ))}
         </div>
-        <input
+        <input className="text-justify"
             type="text"
             placeholder="new items"
             value={name}
             onChange={(e) => setName(e.target.value)}
         />
+
         <button onClick={addItem}>追加</button>
 
         <ul>
@@ -122,7 +134,7 @@ return(
                     <input
                         type="checkbox"
                         checked={item.checked}
-                        defaultChecked className="checkbox checkbox-neutral"
+                        className="checkbox checkbox-neutral"
                         onChange={() => handleCheckboxChange(item)}
                     />
                     <span style={{ margin: "0 10px" }}></span>
@@ -139,7 +151,13 @@ return(
                 </li>
             ))}
         </ul>
+    </div>
 
+
+    <div className="absolute top-4 right-4">
+    <div className="card bg-base-100 w-96 shadow-sm rounded-xl">
+    <div className="card-body">
+    <h1 className="text-3xl font-bold mb-4">編集</h1>
         <ul>
             {items.map((item) => (
                 <li key={item.id}>
@@ -152,6 +170,9 @@ return(
             ))}
         </ul>
     </div>
+    </div>
+    </div>
+</>
 );
 }
 export default App;
