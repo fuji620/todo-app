@@ -103,7 +103,7 @@ function App() {
 
 return(
     <>
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen --color-accent-content">
     <h1 className="text-3xl font-bold mb-4">Todo list</h1>
             <div className="category-tabs">
             {["家電","果物","消耗品"].map((cat) => (
@@ -155,7 +155,7 @@ return(
 
 
     <div className="absolute top-4 right-4">
-    <div className="card bg-base-100 w-96 shadow-sm rounded-xl">
+    <div className="bg-base-300 text-black p-4 rounded-lg">
     <div className="card-body">
     <h1 className="text-3xl font-bold mb-4">編集</h1>
         <ul>
