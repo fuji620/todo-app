@@ -53,6 +53,14 @@ def get_db():
     finally:
         db.close()
 
+
+@app.get("/")
+def read_root():
+    return {"message": "API is running"}
+
+
+
+
 @app.get("/items")  #データを取得
 def read_items(db: Session = Depends(get_db)):
     items = db.query(ItemModel).all()
