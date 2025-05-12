@@ -22,7 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-api-back/venv
+api-back/
 
 # Node
 node_modules
