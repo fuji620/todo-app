@@ -3,7 +3,7 @@ import axios from "axios";
 import React from "react";
 import './App.css';
 
-const fast_API_URL = "http://127.0.0.1:8000";
+const fast_API_URL = "http://54.152.179.246:8000";
 const items_URL = `${fast_API_URL}/items`;
 
 type Item = {
