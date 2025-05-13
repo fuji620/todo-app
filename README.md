@@ -1,7 +1,7 @@
 ![altテキスト](public/screenshot.jpg)
 
 # [Todo app]のURL
-URL.....
+https://fuji620.github.io/todo-app/
 
 # この[Todo app]への想い
 私は以前、産業用ロボットや自動搬送装置を組立、設置、まで責任者として業務をしてきました。  
